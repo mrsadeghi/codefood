@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+<style>
+    .red-border {
+        border: 1px solid #F00;
+    }
+
+    #message-box {
+        display: none;
+    }
+</style>
+<div class="container">
+    <form class="col-lg-6" style="margin:0 auto">
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+            </div>
+            <input name="FirstName" id="firstName" class="form-control" placeholder="First name" type="text">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+            </div>
+            <input name="LastName" id="lastName" class="form-control" placeholder="Last name" type="text">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+            </div>
+            <input name="Email" id="email" class="form-control" placeholder="Email address" type="email">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+            </div>
+            <input name="PhoneNumber" id="phoneNumber" class="form-control" placeholder="Phone number" type="text">
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fab fa-linkedin"></i> </span>
+            </div>
+            <input name="LinkedInUrl" id="linkedInUrl" class="form-control" placeholder="LinkedIn URL" type="text">
+        </div> <!-- form-group// -->
+        <div class="form-group">
+            <button type="button" id="createBtn" class="btn btn-primary btn-block"> Create Account  </button>
+        </div> <!-- form-group// -->
+
+        <div class="alert alert-success" id="message-box">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong id="message"></strong>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#createBtn').click(function () {
+            let $firstName = $('#firstName');
+            let $lastName = $('#lastName');
+            let $email = $('#email');
+            let $phoneNumber = $('#phoneNumber');
+            let $linkedInUrl = $('#linkedInUrl');
+            !$firstName.val() ? $firstName.addClass('red-border') : $firstName.removeClass('red-border');
+            !$lastName.val() ? $lastName.addClass('red-border') : $lastName.removeClass('red-border');
+            !$email.val() ? $email.addClass('red-border') : $email.removeClass('red-border');
+            !$phoneNumber.val() ? $phoneNumber.addClass('red-border') : $phoneNumber.removeClass('red-border');
+            !$linkedInUrl.val() ? $linkedInUrl.addClass('red-border') : $linkedInUrl.removeClass('red-border');
+
+            if (!$firstName.val() || !$lastName.val() || !$email.val() || !$phoneNumber.val() || !$linkedInUrl.val())
+                return;
+            let data = {
+                firstName: $firstName.val(),
+                lastName: $lastName.val(),
+                email: $email.val(),
+                phoneNumber: $phoneNumber.val(),
+                linkedInUrl: $linkedInUrl.val(),
+            }
+            $.ajax({
+                method: "POST",
+                url: "@Url.Action("Register")",
+                data:data
+            }).done(function (result) {
+                debugger
+                let $messageBox = $('#message-box');
+                let $message = $('#message');
+                $messageBox.hide();
+                $messageBox.removeClass('alert-success');
+                $messageBox.removeClass('alert-danger');
+                if (result.isSuccess == true) {
+                    $messageBox.addClass('alert-success');
+                }
+                else {
+                    $messageBox.addClass('alert-danger');
+                }
+                $message.text(result.message);
+
+                $messageBox.fadeTo(2000, 500)//.slideUp(500, function () {
+                    //$messageBox.slideUp(500);
+                //});
+            });
+        })
+    })
+    </script>
+}
